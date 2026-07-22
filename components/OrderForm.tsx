@@ -109,7 +109,7 @@ export default function OrderForm({
       {/* Thông tin chung */}
       <section className="space-y-5">
         <h2 className="text-base font-medium border-b border-line pb-2">Thông tin đơn hàng</h2>
-        <div className="grid sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <Field label="Mã đơn hàng *" name="code" defaultValue={defaultCode} required />
           <div className="sm:col-span-2">
             <label className="block text-sm mb-1.5">Khách hàng *</label>
@@ -122,7 +122,7 @@ export default function OrderForm({
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div>
             <label className="block text-sm mb-1.5">Trạng thái</label>
             <select name="status" defaultValue="DAT_COC" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
@@ -171,7 +171,7 @@ export default function OrderForm({
       <section className="space-y-3">
         <h2 className="text-base font-medium border-b border-line pb-2">Mặt hàng</h2>
 
-        <div className="border border-line">
+        <div className="overflow-x-auto border border-line">
           <div className="grid grid-cols-[2fr_1fr_1.5fr_1.5fr_auto] gap-0 text-xs text-ink/50 bg-line/20 border-b border-line">
             {["Sản phẩm / tên mặt hàng", "SL", "Đơn giá (đ)", "Thành tiền", ""].map((h) => (
               <div key={h} className="px-3 py-2 font-medium">{h}</div>
@@ -251,7 +251,7 @@ export default function OrderForm({
       {/* Tài chính */}
       <section className="space-y-4">
         <h2 className="text-base font-medium border-b border-line pb-2">Tài chính</h2>
-        <div className="grid sm:grid-cols-3 gap-5 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-end">
           <div>
             <p className="text-sm mb-1.5 text-ink/60">Tổng giá trị (tự tính)</p>
             <p className="text-lg font-display">{formatVND(totalAmount)}</p>

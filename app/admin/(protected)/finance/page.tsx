@@ -60,7 +60,7 @@ export default async function FinancePage() {
       <h1 className="font-display text-2xl mb-8">Tài chính</h1>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         <div className="border border-emerald-200 bg-emerald-50 p-5">
           <p className="text-xs text-emerald-700 mb-1 capitalize">{monthLabel}</p>
           <p className="text-3xl font-display text-emerald-800">{formatVND(thu)}</p>
@@ -80,7 +80,7 @@ export default async function FinancePage() {
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Giao dịch gần đây */}
         <div className="border border-line">
           <div className="flex items-center justify-between px-5 py-3 border-b border-line">

@@ -48,7 +48,7 @@ export default async function AdminOrdersPage({
       {orders.length === 0 ? (
         <p className="text-sm text-ink/60">Chưa có đơn hàng nào.</p>
       ) : (
-        <div className="border border-line">
+        <div className="overflow-x-auto border border-line">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-ink/50">

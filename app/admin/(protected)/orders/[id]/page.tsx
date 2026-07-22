@@ -62,8 +62,8 @@ export default async function OrderDetailPage({ params }: { params: { id: string
 
       {/* Progress bar */}
       {!isCancelled && (
-        <div className="mb-8">
-          <div className="flex items-center gap-0">
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex items-center gap-0 min-w-[480px]">
             {PROGRESS_STEPS.map((step, i) => {
               const done = i <= statusIndex;
               const current = i === statusIndex;
@@ -132,7 +132,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
       {/* Mặt hàng */}
       <div className="mb-8">
         <h2 className="text-base font-medium mb-3">Mặt hàng</h2>
-        <div className="border border-line">
+        <div className="overflow-x-auto border border-line">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-ink/50 bg-line/20">

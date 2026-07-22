@@ -23,7 +23,7 @@ export default async function AdminDashboard() {
     <div>
       <h1 className="font-display text-2xl mb-8">Tổng quan</h1>
 
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         <StatCard label="Đơn hàng đang xử lý" value={activeOrderCount} highlight />
         <StatCard label="Báo giá mới chờ xử lý" value={newQuoteCount} />
         <StatCard label="Sản phẩm đang hiển thị" value={productCount} />
@@ -40,6 +40,7 @@ export default async function AdminDashboard() {
         {recentOrders.length === 0 ? (
           <p className="px-5 py-6 text-sm text-ink/60">Chưa có đơn hàng nào.</p>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <tbody>
               {recentOrders.map((o) => (
@@ -61,6 +62,7 @@ export default async function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
@@ -75,6 +77,7 @@ export default async function AdminDashboard() {
         {recentQuotes.length === 0 ? (
           <p className="px-5 py-6 text-sm text-ink/60">Chưa có yêu cầu nào.</p>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <tbody>
               {recentQuotes.map((q: QuoteRequest) => (
@@ -89,6 +92,7 @@ export default async function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

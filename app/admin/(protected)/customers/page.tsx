@@ -24,7 +24,7 @@ export default async function AdminCustomersPage() {
       {customers.length === 0 ? (
         <p className="text-sm text-ink/60">Chưa có khách hàng nào.</p>
       ) : (
-        <div className="border border-line">
+        <div className="overflow-x-auto border border-line">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-ink/50">

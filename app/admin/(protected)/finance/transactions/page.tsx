@@ -63,7 +63,7 @@ export default async function TransactionsPage({
       {transactions.length === 0 ? (
         <p className="text-sm text-ink/60 border border-line p-6">Chưa có giao dịch nào.</p>
       ) : (
-        <div className="border border-line">
+        <div className="overflow-x-auto border border-line">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-line text-left text-ink/50 bg-line/20">
