@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-ink px-6">
       <div className="w-full max-w-sm">
         <p className="text-brass text-xs uppercase tracking-[0.2em] mb-2">
-          Kim Ấn · Quản trị
+          KAMI · Quản trị
         </p>
         <h1 className="font-display text-2xl text-parchment mb-8">
           Đăng nhập
