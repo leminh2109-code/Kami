@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { formatVND, TRANSACTION_CATEGORY_LABELS } from "@/lib/labels";
+import DeleteTransactionButton from "@/components/DeleteTransactionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,7 @@ export default async function TransactionsPage({
                 <th className="px-5 py-3 font-normal">Danh mục</th>
                 <th className="px-5 py-3 font-normal">Diễn giải / Liên kết</th>
                 <th className="px-5 py-3 font-normal text-right">Số tiền</th>
+                <th className="px-5 py-3 font-normal"></th>
               </tr>
             </thead>
             <tbody>
@@ -119,6 +121,15 @@ export default async function TransactionsPage({
                     }`}
                   >
                     {tx.type === "THU" ? "+" : "−"}{formatVND(tx.amount)}
+                  </td>
+                  <td className="px-5 py-3 text-right whitespace-nowrap">
+                    <Link
+                      href={`/admin/finance/transactions/${tx.id}/edit`}
+                      className="text-xs text-brass-dark hover:underline mr-3"
+                    >
+                      Sửa
+                    </Link>
+                    <DeleteTransactionButton id={tx.id} />
                   </td>
                 </tr>
               ))}

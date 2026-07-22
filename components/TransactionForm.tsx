@@ -7,6 +7,18 @@ type CustomerOption = { id: string; code: string; name: string };
 type WorkshopOption = { id: string; code: string; name: string };
 type OrderOption = { id: string; code: string; customer: { name: string } };
 
+type Initial = {
+  id: string;
+  type: "THU" | "CHI";
+  category: string;
+  amount: number;
+  date: string;
+  description: string;
+  orderId?: string | null;
+  customerId?: string | null;
+  workshopId?: string | null;
+};
+
 const THU_CATEGORIES = [
   { value: "THU_KHACH_HANG", label: "Thu từ khách hàng" },
   { value: "KHAC", label: "Thu khác" },
@@ -24,17 +36,21 @@ export default function TransactionForm({
   workshops,
   orders,
   defaultCode,
+  initial,
 }: {
   customers: CustomerOption[];
   workshops: WorkshopOption[];
   orders: OrderOption[];
   defaultCode: string;
+  initial?: Initial;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [type, setType] = useState<"THU" | "CHI">("THU");
-  const [category, setCategory] = useState("THU_KHACH_HANG");
+  const [type, setType] = useState<"THU" | "CHI">(initial?.type ?? "THU");
+  const [category, setCategory] = useState(initial?.category ?? "THU_KHACH_HANG");
+
+  const isEdit = !!initial?.id;
 
   function handleTypeChange(newType: "THU" | "CHI") {
     setType(newType);
@@ -47,7 +63,6 @@ export default function TransactionForm({
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const payload = {
-      code: form.get("code") as string,
       type,
       category,
       amount: Number(form.get("amount")),
@@ -56,13 +71,19 @@ export default function TransactionForm({
       orderId: (form.get("orderId") as string) || undefined,
       customerId: (form.get("customerId") as string) || undefined,
       workshopId: (form.get("workshopId") as string) || undefined,
+      ...(!isEdit && { code: form.get("code") as string }),
     };
 
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/admin/transactions", {
-      method: "POST",
+    const url = isEdit
+      ? `/api/admin/transactions/${initial.id}`
+      : "/api/admin/transactions";
+    const method = isEdit ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -110,16 +131,18 @@ export default function TransactionForm({
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-sm mb-1.5">Mã phiếu *</label>
-          <input
-            name="code"
-            required
-            defaultValue={defaultCode}
-            className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
-          />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        {!isEdit && (
+          <div>
+            <label className="block text-sm mb-1.5">Mã phiếu *</label>
+            <input
+              name="code"
+              required
+              defaultValue={defaultCode}
+              className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
+            />
+          </div>
+        )}
         <div>
           <label className="block text-sm mb-1.5">Danh mục *</label>
           <select
@@ -136,7 +159,7 @@ export default function TransactionForm({
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm mb-1.5">Số tiền (đ) *</label>
           <input
@@ -145,6 +168,7 @@ export default function TransactionForm({
             min={0}
             step={1000}
             required
+            defaultValue={initial?.amount}
             className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
           />
         </div>
@@ -154,7 +178,7 @@ export default function TransactionForm({
             name="date"
             type="date"
             required
-            defaultValue={new Date().toISOString().split("T")[0]}
+            defaultValue={initial?.date ?? new Date().toISOString().split("T")[0]}
             className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
           />
         </div>
@@ -165,16 +189,21 @@ export default function TransactionForm({
         <input
           name="description"
           type="text"
+          defaultValue={initial?.description}
           placeholder="Mô tả ngắn về giao dịch..."
           className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
         />
       </div>
 
       {/* Liên kết */}
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label className="block text-sm mb-1.5">Liên kết đơn hàng</label>
-          <select name="orderId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
+          <select
+            name="orderId"
+            defaultValue={initial?.orderId ?? ""}
+            className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
+          >
             <option value="">-- Không liên kết --</option>
             {orders.map((o) => (
               <option key={o.id} value={o.id}>
@@ -186,7 +215,11 @@ export default function TransactionForm({
         {type === "THU" ? (
           <div>
             <label className="block text-sm mb-1.5">Khách hàng</label>
-            <select name="customerId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
+            <select
+              name="customerId"
+              defaultValue={initial?.customerId ?? ""}
+              className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
+            >
               <option value="">-- Không chọn --</option>
               {customers.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -198,7 +231,11 @@ export default function TransactionForm({
         ) : category === "CHI_XUONG" ? (
           <div>
             <label className="block text-sm mb-1.5">Xưởng gia công</label>
-            <select name="workshopId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
+            <select
+              name="workshopId"
+              defaultValue={initial?.workshopId ?? ""}
+              className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring"
+            >
               <option value="">-- Không chọn --</option>
               {workshops.map((w) => (
                 <option key={w.id} value={w.id}>
@@ -212,13 +249,21 @@ export default function TransactionForm({
 
       {error && <p className="text-sm text-red-700">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="border border-ink px-6 py-2.5 text-sm hover:bg-ink hover:text-parchment transition-colors focus-ring disabled:opacity-50"
-      >
-        {loading ? "Đang lưu..." : "Ghi phiếu"}
-      </button>
+      <div className="flex gap-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="border border-ink px-6 py-2.5 text-sm hover:bg-ink hover:text-parchment transition-colors focus-ring disabled:opacity-50"
+        >
+          {loading ? "Đang lưu..." : isEdit ? "Lưu thay đổi" : "Ghi phiếu"}
+        </button>
+        <a
+          href="/admin/finance/transactions"
+          className="border border-line px-6 py-2.5 text-sm text-ink/60 hover:border-ink hover:text-ink transition-colors focus-ring"
+        >
+          Huỷ
+        </a>
+      </div>
     </form>
   );
 }
