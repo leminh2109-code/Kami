@@ -34,3 +34,49 @@ export const CATEGORY_ORDER = [
   "QUA_LUU_NIEM",
   "KHAC",
 ];
+
+export const ORDER_STATUS_LABELS: Record<string, string> = {
+  DAT_COC: "Đã đặt cọc",
+  DANG_SAN_XUAT: "Đang sản xuất",
+  KIEM_TRA: "Kiểm tra CL",
+  SAN_SANG_GIAO: "Sẵn sàng giao",
+  DA_GIAO: "Đã giao hàng",
+  HOAN_TAT: "Hoàn tất",
+  HUY: "Đã huỷ",
+};
+
+export const ORDER_STATUS_ORDER = [
+  "DAT_COC",
+  "DANG_SAN_XUAT",
+  "KIEM_TRA",
+  "SAN_SANG_GIAO",
+  "DA_GIAO",
+  "HOAN_TAT",
+  "HUY",
+];
+
+export const ORDER_STATUS_COLORS: Record<string, string> = {
+  DAT_COC: "bg-blue-50 text-blue-800 border-blue-200",
+  DANG_SAN_XUAT: "bg-amber-50 text-amber-800 border-amber-200",
+  KIEM_TRA: "bg-purple-50 text-purple-800 border-purple-200",
+  SAN_SANG_GIAO: "bg-emerald-50 text-emerald-800 border-emerald-200",
+  DA_GIAO: "bg-teal-50 text-teal-800 border-teal-200",
+  HOAN_TAT: "bg-stone-100 text-stone-600 border-stone-200",
+  HUY: "bg-red-50 text-red-700 border-red-200",
+};
+
+export const CUSTOMER_TYPE_OPTIONS = [
+  "Cơ quan nhà nước",
+  "Doanh nghiệp",
+  "Tổ chức",
+  "Cá nhân",
+  "Khác",
+];
+
+export function formatVND(amount: number): string {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}

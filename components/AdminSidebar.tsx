@@ -6,8 +6,10 @@ import clsx from "clsx";
 
 const NAV = [
   { href: "/admin", label: "Tổng quan" },
+  { href: "/admin/orders", label: "Đơn hàng" },
+  { href: "/admin/customers", label: "Khách hàng" },
+  { href: "/admin/quotes", label: "Báo giá" },
   { href: "/admin/products", label: "Sản phẩm" },
-  { href: "/admin/quotes", label: "Yêu cầu báo giá" },
 ];
 
 export default function AdminSidebar() {

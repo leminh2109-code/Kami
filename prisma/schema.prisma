@@ -1,25 +1,20 @@
-// Prisma schema for the B2B jewelry trading catalog + admin app.
-//
-// Local dev uses SQLite (zero setup). For production on Vercel, switch
-// `provider` below to "postgresql" and point DATABASE_URL at your
-// Vercel Postgres / Neon connection string. See .env.example.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Category {
-  NHAN // Nhẫn
-  VONG_LAC // Vòng, lắc
-  DAY_CHUYEN // Dây chuyền
-  QUA_TANG // Quà tặng, biểu trưng
-  QUA_LUU_NIEM // Kỷ niệm chương
-  KHAC // Khác
+  NHAN
+  VONG_LAC
+  DAY_CHUYEN
+  QUA_TANG
+  QUA_LUU_NIEM
+  KHAC
 }
 
 enum Material {
@@ -28,48 +23,78 @@ enum Material {
   VANG_14K
   BAC_925
   DA_QUY
-  HOP_KIM // mạ vàng / mạ bạc
+  HOP_KIM
 }
 
 enum QuoteStatus {
-  MOI // mới gửi
-  DANG_XU_LY // đang xử lý
-  DA_BAO_GIA // đã báo giá
-  HOAN_TAT // hoàn tất
-  HUY // huỷ
+  MOI
+  DANG_XU_LY
+  DA_BAO_GIA
+  HOAN_TAT
+  HUY
 }
 
-model Product {
+enum OrderStatus {
+  DAT_COC       // Đã đặt cọc, xác nhận đơn
+  DANG_SAN_XUAT // Đang sản xuất tại xưởng
+  KIEM_TRA      // Kiểm tra chất lượng
+  SAN_SANG_GIAO // Sẵn sàng giao hàng
+  DA_GIAO       // Đã giao hàng
+  HOAN_TAT      // Hoàn tất – thanh toán đầy đủ
+  HUY           // Huỷ đơn
+}
+
+model Customer {
   id          String   @id @default(cuid())
-  code        String   @unique // mã sản phẩm, vd MN-0001
+  code        String   @unique
   name        String
-  slug        String   @unique
-  category    Category
-  material    Material
-  description String
-  imageUrl    String
-  minQuantity Int      @default(1) // số lượng đặt tối thiểu
-  isCustomizable Boolean @default(true) // có nhận khắc logo/thiết kế riêng
+  type        String   @default("")
+  contactName String   @default("")
+  phone       String   @default("")
+  email       String   @default("")
+  address     String   @default("")
+  taxCode     String   @default("")
+  notes       String   @default("")
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  orders Order[]
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  name           String
+  slug           String   @unique
+  category       Category
+  material       Material
+  description    String
+  imageUrl       String
+  minQuantity    Int      @default(1)
+  isCustomizable Boolean  @default(true)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
   quoteItems QuoteItem[]
+  orderItems OrderItem[]
 }
 
 model QuoteRequest {
-  id            String      @id @default(cuid())
-  companyName   String
-  contactName   String
-  phone         String
-  email         String
-  organizationType String   @default("") // cơ quan / doanh nghiệp / tổ chức
-  message       String      @default("")
-  status        QuoteStatus @default(MOI)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id               String      @id @default(cuid())
+  companyName      String
+  contactName      String
+  phone            String
+  email            String
+  organizationType String      @default("")
+  message          String      @default("")
+  status           QuoteStatus @default(MOI)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 
-  items QuoteItem[]
+  items  QuoteItem[]
+  orders Order[]
 }
 
 model QuoteItem {
@@ -80,4 +105,36 @@ model QuoteItem {
   productId      String
   quantity       Int          @default(1)
   note           String       @default("")
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  code             String      @unique
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  customerId       String
+  quoteRequest     QuoteRequest? @relation(fields: [quoteRequestId], references: [id])
+  quoteRequestId   String?
+  status           OrderStatus @default(DAT_COC)
+  depositAmount    Float       @default(0)
+  totalAmount      Float       @default(0)
+  expectedDelivery DateTime?
+  deliveredAt      DateTime?
+  assignedTo       String      @default("")
+  internalNote     String      @default("")
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    String
+  product    Product? @relation(fields: [productId], references: [id])
+  productId  String?
+  customName String   @default("")
+  quantity   Int      @default(1)
+  unitPrice  Float    @default(0)
+  note       String   @default("")
 }
