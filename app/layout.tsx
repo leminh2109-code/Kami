@@ -16,9 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Kim Ấn — Mỹ nghệ vàng bạc, đá quý cho doanh nghiệp",
-  description:
-    "Trang sức, quà tặng, biểu trưng bằng vàng, bạc, đá quý. Đặt gia công theo yêu cầu cho cơ quan, tổ chức, doanh nghiệp.",
+  title: "KAMI Jewelry & Art",
+  description: "KAMI Jewelry & Art — Hệ thống quản lý nội bộ.",
 };
 
 export default function RootLayout({
