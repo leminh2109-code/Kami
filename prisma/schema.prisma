@@ -1,0 +1,83 @@
+// Prisma schema for the B2B jewelry trading catalog + admin app.
+//
+// Local dev uses SQLite (zero setup). For production on Vercel, switch
+// `provider` below to "postgresql" and point DATABASE_URL at your
+// Vercel Postgres / Neon connection string. See .env.example.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  NHAN // Nhẫn
+  VONG_LAC // Vòng, lắc
+  DAY_CHUYEN // Dây chuyền
+  QUA_TANG // Quà tặng, biểu trưng
+  QUA_LUU_NIEM // Kỷ niệm chương
+  KHAC // Khác
+}
+
+enum Material {
+  VANG_24K
+  VANG_18K
+  VANG_14K
+  BAC_925
+  DA_QUY
+  HOP_KIM // mạ vàng / mạ bạc
+}
+
+enum QuoteStatus {
+  MOI // mới gửi
+  DANG_XU_LY // đang xử lý
+  DA_BAO_GIA // đã báo giá
+  HOAN_TAT // hoàn tất
+  HUY // huỷ
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  code        String   @unique // mã sản phẩm, vd MN-0001
+  name        String
+  slug        String   @unique
+  category    Category
+  material    Material
+  description String
+  imageUrl    String
+  minQuantity Int      @default(1) // số lượng đặt tối thiểu
+  isCustomizable Boolean @default(true) // có nhận khắc logo/thiết kế riêng
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  quoteItems QuoteItem[]
+}
+
+model QuoteRequest {
+  id            String      @id @default(cuid())
+  companyName   String
+  contactName   String
+  phone         String
+  email         String
+  organizationType String   @default("") // cơ quan / doanh nghiệp / tổ chức
+  message       String      @default("")
+  status        QuoteStatus @default(MOI)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  items QuoteItem[]
+}
+
+model QuoteItem {
+  id             String       @id @default(cuid())
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  quoteRequestId String
+  product        Product      @relation(fields: [productId], references: [id])
+  productId      String
+  quantity       Int          @default(1)
+  note           String       @default("")
+}
