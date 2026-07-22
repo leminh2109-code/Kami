@@ -12,6 +12,7 @@ const NAV = [
   { href: "/admin/customers", label: "Khách hàng" },
   { href: "/admin/workshops", label: "Xưởng gia công" },
   { href: "/admin/finance", label: "Tài chính" },
+  { href: "/admin/finance/debt", label: "Công nợ" },
   { href: "/admin/quotes", label: "Báo giá" },
   { href: "/admin/products", label: "Sản phẩm" },
 ];
