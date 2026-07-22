@@ -1,16 +1,19 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-5 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-brass text-brass text-sm font-display">
-            KA
-          </span>
-          <span className="font-display text-xl tracking-tight">
-            Kim Ấn
-          </span>
+      <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+        <Link href="/" className="flex items-center group">
+          <Image
+            src="/kami-logo.jpg"
+            alt="KAMI Jewelry & Art"
+            width={120}
+            height={60}
+            className="h-14 w-auto object-contain mix-blend-multiply"
+            priority
+          />
         </Link>
         <nav className="hidden sm:flex items-center gap-8 text-sm">
           <Link href="/catalog" className="hover:text-brass-dark transition-colors focus-ring">

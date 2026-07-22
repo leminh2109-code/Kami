@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 
@@ -27,7 +28,13 @@ export default function AdminSidebar() {
   return (
     <aside className="w-56 shrink-0 border-r border-line min-h-screen py-8 px-5 flex flex-col justify-between">
       <div>
-        <p className="font-display text-lg mb-8">KAMI</p>
+        <Image
+          src="/kami-logo.jpg"
+          alt="KAMI"
+          width={100}
+          height={50}
+          className="h-12 w-auto object-contain mix-blend-multiply mb-8"
+        />
         <nav className="space-y-1">
           {NAV.map((item) => {
             const active =
