@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 export default async function NewOrderPage() {
-  const [customers, products, quotes, orderCount] = await Promise.all([
+  const [customers, products, workshops, quotes, orderCount] = await Promise.all([
     prisma.customer.findMany({
       where: { isActive: true },
       orderBy: { name: "asc" },
@@ -13,6 +13,11 @@ export default async function NewOrderPage() {
     prisma.product.findMany({
       where: { isActive: true },
       orderBy: { code: "asc" },
+      select: { id: true, code: true, name: true },
+    }),
+    prisma.workshop.findMany({
+      where: { isActive: true },
+      orderBy: { name: "asc" },
       select: { id: true, code: true, name: true },
     }),
     prisma.quoteRequest.findMany({
@@ -41,6 +46,7 @@ export default async function NewOrderPage() {
         <OrderForm
           customers={customers}
           products={products}
+          workshops={workshops}
           quotes={quotes.map((q) => ({ ...q, createdAt: q.createdAt.toISOString() }))}
           defaultCode={defaultCode}
         />

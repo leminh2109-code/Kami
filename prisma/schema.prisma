@@ -35,13 +35,26 @@ enum QuoteStatus {
 }
 
 enum OrderStatus {
-  DAT_COC       // Đã đặt cọc, xác nhận đơn
-  DANG_SAN_XUAT // Đang sản xuất tại xưởng
-  KIEM_TRA      // Kiểm tra chất lượng
-  SAN_SANG_GIAO // Sẵn sàng giao hàng
-  DA_GIAO       // Đã giao hàng
-  HOAN_TAT      // Hoàn tất – thanh toán đầy đủ
-  HUY           // Huỷ đơn
+  DAT_COC
+  DANG_SAN_XUAT
+  KIEM_TRA
+  SAN_SANG_GIAO
+  DA_GIAO
+  HOAN_TAT
+  HUY
+}
+
+enum TransactionType {
+  THU
+  CHI
+}
+
+enum TransactionCategory {
+  THU_KHACH_HANG
+  CHI_XUONG
+  CHI_NGUYEN_LIEU
+  CHI_VAN_HANH
+  KHAC
 }
 
 model Customer {
@@ -59,7 +72,25 @@ model Customer {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  orders Order[]
+  orders       Order[]
+  transactions Transaction[]
+}
+
+model Workshop {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  contactName String   @default("")
+  phone       String   @default("")
+  address     String   @default("")
+  specialty   String   @default("")
+  notes       String   @default("")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders       Order[]
+  transactions Transaction[]
 }
 
 model Product {
@@ -108,23 +139,26 @@ model QuoteItem {
 }
 
 model Order {
-  id               String      @id @default(cuid())
-  code             String      @unique
-  customer         Customer    @relation(fields: [customerId], references: [id])
+  id               String        @id @default(cuid())
+  code             String        @unique
+  customer         Customer      @relation(fields: [customerId], references: [id])
   customerId       String
   quoteRequest     QuoteRequest? @relation(fields: [quoteRequestId], references: [id])
   quoteRequestId   String?
-  status           OrderStatus @default(DAT_COC)
-  depositAmount    Float       @default(0)
-  totalAmount      Float       @default(0)
+  workshop         Workshop?     @relation(fields: [workshopId], references: [id])
+  workshopId       String?
+  status           OrderStatus   @default(DAT_COC)
+  depositAmount    Float         @default(0)
+  totalAmount      Float         @default(0)
   expectedDelivery DateTime?
   deliveredAt      DateTime?
-  assignedTo       String      @default("")
-  internalNote     String      @default("")
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  assignedTo       String        @default("")
+  internalNote     String        @default("")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  items OrderItem[]
+  items        OrderItem[]
+  transactions Transaction[]
 }
 
 model OrderItem {
@@ -137,4 +171,23 @@ model OrderItem {
   quantity   Int      @default(1)
   unitPrice  Float    @default(0)
   note       String   @default("")
+}
+
+model Transaction {
+  id          String              @id @default(cuid())
+  code        String              @unique
+  type        TransactionType
+  category    TransactionCategory
+  amount      Float
+  date        DateTime
+  description String              @default("")
+  orderId     String?
+  customerId  String?
+  workshopId  String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  order    Order?    @relation(fields: [orderId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+  workshop Workshop? @relation(fields: [workshopId], references: [id])
 }

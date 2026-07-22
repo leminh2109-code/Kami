@@ -14,6 +14,7 @@ const schema = z.object({
   code: z.string().min(1),
   customerId: z.string().min(1),
   quoteRequestId: z.string().optional(),
+  workshopId: z.string().optional(),
   status: z
     .enum(["DAT_COC", "DANG_SAN_XUAT", "KIEM_TRA", "SAN_SANG_GIAO", "DA_GIAO", "HOAN_TAT", "HUY"])
     .default("DAT_COC"),
@@ -43,13 +44,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Dữ liệu không hợp lệ", detail: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { items, expectedDelivery, quoteRequestId, ...orderData } = parsed.data;
+  const { items, expectedDelivery, quoteRequestId, workshopId, ...orderData } = parsed.data;
 
   try {
     const order = await prisma.order.create({
       data: {
         ...orderData,
         quoteRequestId: quoteRequestId || null,
+        workshopId: workshopId || null,
         expectedDelivery: expectedDelivery ? new Date(expectedDelivery) : null,
         items: {
           create: items.map((item) => ({

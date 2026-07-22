@@ -6,6 +6,7 @@ import { ORDER_STATUS_LABELS, ORDER_STATUS_ORDER, formatVND } from "@/lib/labels
 
 type Customer = { id: string; code: string; name: string };
 type Product = { id: string; code: string; name: string };
+type Workshop = { id: string; code: string; name: string };
 type QuoteRequest = { id: string; companyName: string; createdAt: string };
 
 type Item = {
@@ -25,11 +26,13 @@ function newItem(): Item {
 export default function OrderForm({
   customers,
   products,
+  workshops,
   quotes,
   defaultCode,
 }: {
   customers: Customer[];
   products: Product[];
+  workshops: Workshop[];
   quotes: QuoteRequest[];
   defaultCode: string;
 }) {
@@ -66,6 +69,7 @@ export default function OrderForm({
       code: form.get("code") as string,
       customerId: form.get("customerId") as string,
       quoteRequestId: (form.get("quoteRequestId") as string) || undefined,
+      workshopId: (form.get("workshopId") as string) || undefined,
       status: form.get("status") as string,
       depositAmount,
       totalAmount,
@@ -137,19 +141,30 @@ export default function OrderForm({
           </div>
         </div>
 
-        {quotes.length > 0 && (
+        <div className="grid sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm mb-1.5">Liên kết từ báo giá (tuỳ chọn)</label>
-            <select name="quoteRequestId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
-              <option value="">-- Không liên kết --</option>
-              {quotes.map((q) => (
-                <option key={q.id} value={q.id}>
-                  {q.companyName} — {new Date(q.createdAt).toLocaleDateString("vi-VN")}
-                </option>
+            <label className="block text-sm mb-1.5">Xưởng gia công</label>
+            <select name="workshopId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
+              <option value="">-- Chưa chọn --</option>
+              {workshops.map((w) => (
+                <option key={w.id} value={w.id}>{w.code} — {w.name}</option>
               ))}
             </select>
           </div>
-        )}
+          {quotes.length > 0 && (
+            <div>
+              <label className="block text-sm mb-1.5">Liên kết từ báo giá</label>
+              <select name="quoteRequestId" className="w-full border border-line bg-white px-3 py-2 text-sm focus-ring">
+                <option value="">-- Không liên kết --</option>
+                {quotes.map((q) => (
+                  <option key={q.id} value={q.id}>
+                    {q.companyName} — {new Date(q.createdAt).toLocaleDateString("vi-VN")}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Mặt hàng */}

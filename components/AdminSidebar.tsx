@@ -8,6 +8,8 @@ const NAV = [
   { href: "/admin", label: "Tổng quan" },
   { href: "/admin/orders", label: "Đơn hàng" },
   { href: "/admin/customers", label: "Khách hàng" },
+  { href: "/admin/workshops", label: "Xưởng gia công" },
+  { href: "/admin/finance", label: "Tài chính" },
   { href: "/admin/quotes", label: "Báo giá" },
   { href: "/admin/products", label: "Sản phẩm" },
 ];
@@ -25,7 +27,7 @@ export default function AdminSidebar() {
   return (
     <aside className="w-56 shrink-0 border-r border-line min-h-screen py-8 px-5 flex flex-col justify-between">
       <div>
-        <p className="font-display text-lg mb-8">Kim Ấn</p>
+        <p className="font-display text-lg mb-8">KAMI</p>
         <nav className="space-y-1">
           {NAV.map((item) => {
             const active =

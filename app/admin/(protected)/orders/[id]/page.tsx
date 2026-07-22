@@ -25,6 +25,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
     where: { id: params.id },
     include: {
       customer: true,
+      workshop: { select: { id: true, code: true, name: true, phone: true } },
       quoteRequest: { select: { id: true, companyName: true } },
       items: {
         include: { product: { select: { id: true, code: true, name: true } } },
@@ -113,6 +114,13 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             </p>
           )}
         </InfoBlock>
+
+        {order.workshop && (
+          <InfoBlock label="Xưởng gia công">
+            <p className="font-medium">{order.workshop.name}</p>
+            <p className="text-ink/60 text-xs">{order.workshop.code}{order.workshop.phone ? ` · ${order.workshop.phone}` : ""}</p>
+          </InfoBlock>
+        )}
 
         {order.quoteRequest && (
           <InfoBlock label="Từ báo giá">

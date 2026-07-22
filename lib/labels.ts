@@ -73,6 +73,19 @@ export const CUSTOMER_TYPE_OPTIONS = [
   "Khác",
 ];
 
+export const TRANSACTION_TYPE_LABELS: Record<string, string> = {
+  THU: "Thu",
+  CHI: "Chi",
+};
+
+export const TRANSACTION_CATEGORY_LABELS: Record<string, string> = {
+  THU_KHACH_HANG: "Thu từ khách hàng",
+  CHI_XUONG: "Thanh toán xưởng",
+  CHI_NGUYEN_LIEU: "Chi nguyên liệu",
+  CHI_VAN_HANH: "Chi vận hành",
+  KHAC: "Khác",
+};
+
 export function formatVND(amount: number): string {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
